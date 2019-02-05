@@ -1,0 +1,32 @@
+body {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+}
+
+hr {
+    border: 1px solid gainsboro;
+    border-bottom: none;
+}
+
+.day {
+    width: 300px;
+}
+
+.day-label {
+    font-size: 16px;
+    font-weight: 900;
+    color: #d46200;
+    padding-bottom: 10px;
+}
+
+.meal {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+}
+
+.meal-input {
+    width: 200px;
+    border-radius: 2px;
+    border: 1px solid gainsboro;
+}

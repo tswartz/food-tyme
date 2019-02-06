@@ -17,7 +17,17 @@ const MEALS = {
     DINNER: 'DINNER',
 };
 
-let menuData = {};
+const EMPTY_DAY = Object.keys(MEALS).reduce((_obj, meal) => {
+    _obj[meal] = { checked: false, text: '' };
+    return _obj;
+}, {});
+
+const EMPTY_WEEK = Object.keys(DAYS).reduce((obj, day) => {
+    obj[day] = EMPTY_DAY;
+    return obj
+}, {});
+
+let menuData = EMPTY_WEEK;
 
 function saveMenuData() {
     fs.writeFile('menuData.txt', JSON.stringify(menuData), function (err) {
@@ -46,6 +56,18 @@ function onTextChange(day, meal) {
         menuData[day][meal]['text'] = textInput.value;
         debouncedSaveMenuData();
     }
+}
+
+function onClearDayClick(day) {
+    menuData[day] = EMPTY_DAY;
+    renderMenu();
+    debouncedSaveMenuData();
+}
+
+function onClearWeekClick() {
+    menuData = EMPTY_WEEK;
+    renderMenu();
+    debouncedSaveMenuData();
 }
 
 function renderMeal(day, meal) {
@@ -78,7 +100,7 @@ function renderDay(day) {
     dayContainer.innerHTML = `
         <div class="day-label">
             <h5>${getTitleCasedString(day)}</h5>
-            <a>Clear</a>
+            <a onclick="onClearDayClick('${day}')">Clear</a>
         </div>
     `;
     Object.keys(MEALS).forEach(meal => {
@@ -89,6 +111,7 @@ function renderDay(day) {
 
 function renderMenu() {
     const container = document.getElementById('container');
+    container.innerHTML = '';
     Object.keys(DAYS).forEach((day, index) => {
         container.appendChild(renderDay(day));
         if (index < Object.keys(DAYS).length - 1) {
@@ -113,13 +136,6 @@ function validateMenuData(parsedData) {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    menuData = Object.keys(DAYS).reduce((obj, day) => {
-        obj[day] = Object.keys(MEALS).reduce((_obj, meal) => {
-            _obj[meal] = { checked: false, text: '' };
-            return _obj;
-        }, {});
-        return obj
-    }, {});
     fs.readFile('menuData.txt', (err, data) => { 
         if (err) throw err; 
         try {

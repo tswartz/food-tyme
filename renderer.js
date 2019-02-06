@@ -53,14 +53,15 @@ function renderMeal(day, meal) {
     mealContainer.setAttribute('class', 'meal');
     const mealData = menuData[day][meal];
     mealContainer.innerHTML = `
-        <span>
+        <label class="checkbox-container">
             <input
                 data-meal="${day}-${meal}-checked"
                 type="checkbox"
                 onclick="onCheckboxChange('${day}', '${meal}')"
                 ${mealData.checked ? 'checked' : ''}>
-            <span class="meal-label">${getTitleCasedString(meal)}</span>
-        </span>
+            <span class="checkmark"></span>
+        </label>
+        <div class="meal-label">${getTitleCasedString(meal)}</div>        
         <input
             onkeyup="onTextChange('${day}', '${meal}')"
             data-meal="${day}-${meal}-text"
@@ -74,10 +75,12 @@ function renderMeal(day, meal) {
 function renderDay(day) {
     const dayContainer = document.createElement('div');
     dayContainer.setAttribute('class', 'day')
-    const dayLabel = document.createElement('div');
-    dayLabel.setAttribute('class', 'day-label');
-    dayLabel.innerHTML = day;
-    dayContainer.appendChild(dayLabel);
+    dayContainer.innerHTML = `
+        <div class="day-label">
+            <h5>${getTitleCasedString(day)}</h5>
+            <a>Clear</a>
+        </div>
+    `;
     Object.keys(MEALS).forEach(meal => {
         dayContainer.appendChild(renderMeal(day, meal));
     });

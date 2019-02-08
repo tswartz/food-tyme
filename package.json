@@ -1,10 +1,54 @@
 {
-  "name": "FoodTyme",
+  "name": "foodtyme",
+  "productName": "FoodTyme",
   "version": "1.0.0",
   "description": "FoodTyme",
-  "main": "main.js",
+  "main": "./app/main.js",
   "scripts": {
-    "start": "electron ."
+    "postinstall": "install-app-deps",
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "com.example.foodtyme",
+    "productName": "FoodTyme",
+    "files": [
+      "**/*",
+      "./app/*",
+      "./app/menuData.txt"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "icon": "build/icon.png",
+      "iconSize": 100,
+      "contents": [
+        {
+          "x": 110,
+          "y": 150,
+          "type": "file"
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "squirrel",
+      "icon": "build/icon.ico"
+    }
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -17,6 +61,11 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^4.0.3"
+    "electron": "^4.0.3",
+    "electron-builder": "^20.38.5"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "lodash": "^4.17.11"
   }
 }

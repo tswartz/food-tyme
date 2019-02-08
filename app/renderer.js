@@ -30,7 +30,7 @@ const EMPTY_WEEK = Object.keys(DAYS).reduce((obj, day) => {
 let menuData = EMPTY_WEEK;
 
 function saveMenuData() {
-    fs.writeFile('menuData.txt', JSON.stringify(menuData), function (err) {
+    fs.writeFile(`${__dirname}/menuData.txt`, JSON.stringify(menuData), function (err) {
         if (err) throw err;
         console.log('saved', menuData);
     });
@@ -136,11 +136,10 @@ function validateMenuData(parsedData) {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    fs.readFile('menuData.txt', (err, data) => { 
-        if (err) throw err; 
+    fs.readFile(`${__dirname}/menuData.txt`, (err, data) => { 
         try {
-            const rawData = data.toString() || "{}";
-            const parsedData = JSON.parse(rawData);
+            const rawData = data && data.toString();
+            const parsedData = JSON.parse(rawData || "{}");
             if (validateMenuData(parsedData)) {
                 menuData = parsedData;
             }
@@ -148,5 +147,6 @@ document.addEventListener('DOMContentLoaded', function(){
             console.log('error while reading saved menu data');
         }
         renderMenu();
+        if (err) throw err;
     });
 });

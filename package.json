@@ -1,7 +1,7 @@
 {
   "name": "FoodTyme",
   "version": "1.0.0",
-  "description": "What's on the menu this week",
+  "description": "FoodTyme",
   "main": "main.js",
   "scripts": {
     "start": "electron ."

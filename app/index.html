@@ -9,11 +9,24 @@
     <link href="./styles.css" rel="stylesheet" />
   </head>
   <body>
-    <div class="header">
-      <h1>What's on the menu this week?</h1>
-      <a onclick="onClearWeekClick()">Clear all</a>
+    <nav class="tabs">
+      <a role="button" class="tab" data-tab-id="MENU" onclick="setActiveTab(TABS.MENU)">Menu</a>
+      <a role="button" class="tab" data-tab-id="RECIPES" onclick="setActiveTab(TABS.RECIPES)">Recipes</a>
+    </nav>
+    <div class="tab-content" data-tab-id="MENU">
+        <div class="header">
+          <h1>What's on the menu this week?</h1>
+          <a onclick="onClearWeekClick()">Clear all</a>
+        </div>
+        <hr />
+        <div id="container"></div>
     </div>
-    <hr />
-    <div id="container"></div>
+    <div class="tab-content" data-tab-id="RECIPES">
+        <div class="header">
+          <h1>What's cookin'?</h1>
+        </div>
+        <hr />
+        <div>recipes</div>
+    </div>
   </body>
 </html>

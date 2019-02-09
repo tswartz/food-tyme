@@ -1,7 +1,8 @@
 const fs = require('fs');
 const lodash = require('lodash');
-const { DAYS, MEALS, EMPTY_DAY, EMPTY_WEEK, validateMenuData } = require('./data');
+const { TABS, DAYS, MEALS, EMPTY_DAY, EMPTY_WEEK, validateMenuData } = require('./data');
 
+let activeTabId = TABS.MENU;
 let menuData = EMPTY_WEEK;
 
 function saveMenuData() {
@@ -95,7 +96,22 @@ function renderMenu() {
     });
 }
 
+function setActiveTab(tabId) {
+    activeTabId = tabId;
+    const tabs = document.getElementsByClassName('tab');
+    const tabContents = document.getElementsByClassName('tab-content');
+    for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("is--active");
+    }
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+    }
+    document.querySelector(`.tab[data-tab-id="${tabId}"]`).classList.add('is--active');
+    document.querySelector(`.tab-content[data-tab-id="${tabId}"]`).style.display = "block";
+}
+
 document.addEventListener('DOMContentLoaded', function(){
+    setActiveTab(activeTabId);
     fs.readFile(`${__dirname}/menuData.txt`, (err, data) => { 
         try {
             const rawData = data && data.toString();

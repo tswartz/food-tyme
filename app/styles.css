@@ -1,3 +1,7 @@
+html, body, .tab-content {
+    height: 100%;
+}
+
 body {
     padding-bottom: 24px;
     font-family: 'Lato', sans-serif;
@@ -7,7 +11,14 @@ body {
 }
 
 .tabs {
+    position: fixed;
     display: flex;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    padding: 0 8px;
+    background: white;
+    z-index: 100;
     border-bottom: 1px solid #cbd6e2;
 }
 
@@ -27,6 +38,10 @@ a.tab.is--active:after {
     left: 0px;
     top: 52px;
     border-radius: 4px;
+}
+
+.tab-content {
+    margin-top: 50px;
 }
 
 hr {
@@ -167,4 +182,17 @@ hr {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+  }
+
+  #recipes-content {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: none;
+    border-top: 1px solid #dfe3eb;
+    outline: none;
+    padding: 20px;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #33475b;
   }

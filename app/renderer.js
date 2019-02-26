@@ -1,6 +1,7 @@
 const fs = require('fs');
 const lodash = require('lodash');
 const { TABS, DAYS, MEALS, EMPTY_DAY, EMPTY_WEEK, validateMenuData } = require('./data');
+const { updateLinks } = require('./linkify');
 
 let activeTabId = TABS.MENU;
 let menuData = EMPTY_WEEK;
@@ -12,7 +13,15 @@ function saveMenuData() {
     });
 }
 
+function saveRecipesData(data) {
+    fs.writeFile(`${__dirname}/recipesData.txt`, data, function (err) {
+        if (err) throw err;
+        console.log('saved', data);
+    });
+}
+
 const debouncedSaveMenuData = lodash.debounce(saveMenuData, 500);
+const debouncedSaveRecipesData = lodash.debounce(saveRecipesData, 500);
 
 function getTitleCasedString(str) {
     return str.charAt(0).concat(str.slice(1).toLowerCase())
@@ -44,6 +53,16 @@ function onClearWeekClick() {
     menuData = EMPTY_WEEK;
     renderMenu();
     debouncedSaveMenuData();
+}
+
+const ENTER_KEY_CODE = 32;
+
+function onRecipeTextChange(event) {
+    const textArea = document.getElementById('recipes-content');
+    if (event.keyCode === ENTER_KEY_CODE) {
+        updateLinks(textArea);
+    }
+    debouncedSaveRecipesData(textArea.innerHTML);
 }
 
 function renderMeal(day, meal) {
@@ -121,6 +140,17 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         } catch (e) {
             console.log('error while reading saved menu data');
+        }
+        renderMenu();
+        if (err) throw err;
+    });
+    fs.readFile(`${__dirname}/recipesData.txt`, (err, data) => { 
+        try {
+            const rawData = data ? data.toString() : '';
+            const textArea = document.getElementById('recipes-content');
+            textArea.innerHTML = rawData;
+        } catch (e) {
+            console.log('error while reading saved recipes data');
         }
         renderMenu();
         if (err) throw err;

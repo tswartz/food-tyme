@@ -4,7 +4,11 @@ const { TABS, DAYS, MEALS, EMPTY_DAY, EMPTY_WEEK, validateMenuData } = require('
 const { updateLinks } = require('./linkify');
 
 let activeTabId = TABS.MENU;
-let menuData = EMPTY_WEEK;
+let menuData = clone(EMPTY_WEEK);
+
+function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
 
 function saveMenuData() {
     fs.writeFile(`${__dirname}/menuData.txt`, JSON.stringify(menuData), function (err) {
@@ -44,13 +48,13 @@ function onTextChange(day, meal) {
 }
 
 function onClearDayClick(day) {
-    menuData[day] = EMPTY_DAY;
+    menuData[day] = clone(EMPTY_DAY);
     renderMenu();
     debouncedSaveMenuData();
 }
 
 function onClearWeekClick() {
-    menuData = EMPTY_WEEK;
+    menuData = clone(EMPTY_WEEK);
     renderMenu();
     debouncedSaveMenuData();
 }

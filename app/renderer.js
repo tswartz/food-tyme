@@ -109,7 +109,7 @@ function renderDay(day) {
 }
 
 function renderMenu() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('menu-container');
     container.innerHTML = '';
     Object.keys(DAYS).forEach((day, index) => {
         container.appendChild(renderDay(day));

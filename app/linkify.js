@@ -1,3 +1,5 @@
+var linkifyHtml = require('linkifyjs/html');
+
 function saveSelection(containerEl) {
     const range = window.getSelection().getRangeAt(0);
     const preSelectionRange = range.cloneRange();
@@ -42,49 +44,9 @@ function restoreSelection(containerEl, savedSel) {
     sel.addRange(range);
 }
 
-function createLink(matchedTextNode) {
-    const el = document.createElement("a");
-    el.href = matchedTextNode.data;
-    el.appendChild(matchedTextNode);
-    return el;
-}
-
-function shouldLinkifyContents(el) {
-    return el.tagName != "A";
-}
-
-function surroundInElement(el, regex, surrounderCreateFunc, shouldSurroundFunc) {
-    let child = el.lastChild;
-    while (child) {
-        if (child.nodeType == 1 && shouldSurroundFunc(el)) {
-            surroundInElement(child, regex, createLink, shouldSurroundFunc);
-        } else if (child.nodeType == 3) {
-            surroundMatchingText(child, regex, surrounderCreateFunc);
-        }
-        child = child.previousSibling;
-    }
-}
-
-function surroundMatchingText(textNode, regex, surrounderCreateFunc) {
-    const parent = textNode.parentNode;
-    let result, surroundingNode, matchedTextNode, matchLength, matchedText;
-    while ( textNode && (result = regex.exec(textNode.data)) ) {
-        matchedTextNode = textNode.splitText(result.index);
-        matchedText = result[0];
-        matchLength = matchedText.length;
-        textNode = (matchedTextNode.length > matchLength) ?
-            matchedTextNode.splitText(matchLength) : null;
-        surroundingNode = surrounderCreateFunc(matchedTextNode.cloneNode(true));
-        parent.insertBefore(surroundingNode, matchedTextNode);
-        parent.removeChild(matchedTextNode);
-    }
-}
-
-const URL_REGEX = /(http[s]?):\/\/\S+/;
-
 function updateLinks(textbox) {
     const savedSelection = saveSelection(textbox);
-    surroundInElement(textbox, URL_REGEX, createLink, shouldLinkifyContents);
+    textbox.innerHTML = linkifyHtml(textbox.innerHTML);
     restoreSelection(textbox, savedSelection);
 }
 

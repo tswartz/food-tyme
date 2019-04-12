@@ -44,6 +44,10 @@ a.tab.is--active:after {
     margin-top: 50px;
 }
 
+#menu-container {
+    padding-bottom: 32px;
+}
+
 hr {
     border: 1px solid #dfe3eb;
     border-bottom: none;

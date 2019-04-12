@@ -66,6 +66,8 @@
   },
   "dependencies": {
     "fs": "0.0.1-security",
-    "lodash": "^4.17.11"
+    "linkifyjs": "^2.1.8",
+    "lodash": "^4.17.11",
+    "save": "^2.3.3"
   }
 }

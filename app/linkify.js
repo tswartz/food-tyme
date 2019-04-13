@@ -1,4 +1,5 @@
 var linkifyHtml = require('linkifyjs/html');
+const { shell } = require('electron');
 
 function saveSelection(containerEl) {
     const range = window.getSelection().getRangeAt(0);
@@ -44,12 +45,24 @@ function restoreSelection(containerEl, savedSel) {
     sel.addRange(range);
 }
 
+function makeLinksClickable(textbox) {
+    const links = textbox.getElementsByTagName('a');
+    for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        link.onclick = () => {
+            shell.openExternal(link.href);
+        };
+    }
+}
+
 function updateLinks(textbox) {
     const savedSelection = saveSelection(textbox);
     textbox.innerHTML = linkifyHtml(textbox.innerHTML);
+    makeLinksClickable(textbox);
     restoreSelection(textbox, savedSelection);
 }
 
 module.exports = {
     updateLinks,
+    makeLinksClickable,
 };

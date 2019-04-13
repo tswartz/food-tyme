@@ -1,7 +1,8 @@
 const fs = require('fs');
 const lodash = require('lodash');
 const { TABS, DAYS, MEALS, EMPTY_DAY, EMPTY_WEEK, validateMenuData } = require('./data');
-const { updateLinks } = require('./linkify');
+const { updateLinks, makeLinksClickable } = require('./linkify');
+const electron = require('electron');
 
 let activeTabId = TABS.MENU;
 let menuData = clone(EMPTY_WEEK);
@@ -10,15 +11,17 @@ function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+const dirname = (electron.app || electron.remote.app).getPath('userData');
+
 function saveMenuData() {
-    fs.writeFile(`${__dirname}/menuData.txt`, JSON.stringify(menuData), function (err) {
+    fs.writeFile(`${dirname}/menuData.txt`, JSON.stringify(menuData), function (err) {
         if (err) throw err;
         console.log('saved', menuData);
     });
 }
 
 function saveRecipesData(data) {
-    fs.writeFile(`${__dirname}/recipesData.txt`, data, function (err) {
+    fs.writeFile(`${dirname}/recipesData.txt`, data, function (err) {
         if (err) throw err;
         console.log('saved', data);
     });
@@ -135,7 +138,7 @@ function setActiveTab(tabId) {
 
 document.addEventListener('DOMContentLoaded', function(){
     setActiveTab(activeTabId);
-    fs.readFile(`${__dirname}/menuData.txt`, (err, data) => { 
+    fs.readFile(`${dirname}/menuData.txt`, (err, data) => { 
         try {
             const rawData = data && data.toString();
             const parsedData = JSON.parse(rawData || "{}");
@@ -148,11 +151,12 @@ document.addEventListener('DOMContentLoaded', function(){
         renderMenu();
         if (err) throw err;
     });
-    fs.readFile(`${__dirname}/recipesData.txt`, (err, data) => { 
+    fs.readFile(`${dirname}/recipesData.txt`, (err, data) => { 
         try {
             const rawData = data ? data.toString() : '';
             const textArea = document.getElementById('recipes-content');
             textArea.innerHTML = rawData;
+            makeLinksClickable(textArea);
         } catch (e) {
             console.log('error while reading saved recipes data');
         }
